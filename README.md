@@ -11,7 +11,7 @@ resource "aws_s3_bucket" "bucket" {}
 # Upload a directory of files to the bucket
 
 module "s3_file_upload" {
-  source = "github.com/barneyparker/terraform-aws-s3-file-upload"
+  source = "barneyparker/s3-file-upload/aws"
 
   bucket_id = aws_s3_bucket.bucket.id
   source_dir = "${path.module}/files"
