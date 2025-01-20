@@ -7,8 +7,10 @@ locals {
     "json"    = "application/json"
     "map"     = "application/json"
     "png"     = "image/png"
+    "py"      = "text/x-python"
+    "service" = "text/plain"
     "svg"     = "image/svg+xml"
     "txt"     = "text/plain"
-    "service" = "text/plain"
+    "yaml"    = "text/yaml"
   }
 }
