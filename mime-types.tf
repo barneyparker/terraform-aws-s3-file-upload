@@ -6,6 +6,7 @@ locals {
     "js"      = "application/javascript"
     "json"    = "application/json"
     "map"     = "application/json"
+    "mp3"     = "audio/mpeg"
     "png"     = "image/png"
     "py"      = "text/x-python"
     "service" = "text/plain"
