@@ -4,6 +4,7 @@ locals {
     "css"     = "text/css"
     "html"    = "text/html"
     "ico"     = "image/vnd.microsoft.icon"
+    "gif"     = "image/gif"
     "jpg"     = "image/jpeg"
     "jpeg"    = "image/jpeg"
     "js"      = "application/javascript"
