@@ -1,0 +1,58 @@
+name: Update Mime-Types
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  update-mime-types:
+    name: Update Mime-Types
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Get mime-types
+        shell: bash
+        run: curl https://raw.githubusercontent.com/carlgarner/mime.json/refs/heads/master/index.json > mime-types.json
+
+      - name: Convert
+        shell: bash
+        run: |
+          sed -i 's/": "/" = "/g' mime-types.json
+          MIME=$(< mime-types.json)
+          
+          cat <<EOF > mime-types.tf
+          locals {
+            mime_types = $MIME
+          }
+          EOF
+
+      - uses: opentofu/setup-opentofu@v1
+        with:
+          tofu_version: '1.10.5'
+          tofu_wrapper: false
+
+      - name: TF fmt
+        shell: bash
+        run: tofu fmt mime-types.tf
+
+      - name: Check diff
+        id: check-diff
+        shell: bash
+        run: |
+          [[ -n $(git status -uno --porcelain) ]] && echo "CHANGES=1" >> $GITHUB_OUTPUT
+          echo "DATE=$(date +%Y-%m-%d)" >> $GITHUB_ENV
+          
+      - name: Create PR
+        if: ${{ steps.check-diff.outputs.CHANGES == 1 }}
+        uses: peter-evans/create-pull-request@v7
+        with:
+          commit-message: 'Updating mime-types.tf'
+          title: 'Update mime-types.tf - ${{ env.DATE }}'
+          branch: mime-types-${{ env.DATE }}
+          add-paths: |
+            mime-types.tf
